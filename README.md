@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# J&F Development Website
 
-## Getting Started
+Eine moderne, professionelle Business-Website für J&F Development, entwickelt mit Next.js, TypeScript und Tailwind CSS.
 
-First, run the development server:
+## 🚀 Features
+
+- **Modern Stack**: Next.js 16 mit App Router, TypeScript und Tailwind CSS
+- **Responsive Design**: Optimiert für alle Bildschirmgrößen
+- **SEO-Optimiert**: Optimale Suchmaschinenoptimierung
+- **Professionelle Seiten**: 
+  - Homepage mit Hero Section und Feature-Highlights
+  - Über uns - Unternehmensgeschichte und Werte
+  - Leistungen - Umfassende Service-Übersicht
+  - Kontakt - Kontaktformular und Informationen
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/)
+- **Sprache**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Icons**: Heroicons (SVG)
+- **Package Manager**: npm
+
+## 📦 Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Dependencies installieren
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏃 Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Development Server starten
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Öffnen Sie [http://localhost:3000](http://localhost:3000) im Browser.
 
-## Learn More
+## 🏗️ Build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Production Build erstellen
+npm run build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Production Server starten
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Projektstruktur
 
-## Deploy on Vercel
+```
+jf-website/
+├── src/
+│   ├── app/              # App Router Pages
+│   │   ├── about/        # Über uns Seite
+│   │   ├── services/     # Leistungen Seite
+│   │   ├── contact/      # Kontakt Seite
+│   │   ├── layout.tsx    # Root Layout
+│   │   └── page.tsx      # Homepage
+│   └── components/       # React Komponenten
+│       ├── Navigation.tsx
+│       └── Footer.tsx
+├── public/               # Statische Assets
+└── .github/
+    └── copilot-instructions.md
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Anpassungen
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Farben ändern
+Die Hauptfarbe (Blau) kann in den Tailwind-Klassen angepasst werden. Suchen Sie nach `blue-600` und ersetzen Sie es durch Ihre gewünschte Farbe.
+
+### Inhalte anpassen
+- **Unternehmensname**: Aktualisieren Sie "J&F Development" in den Komponenten
+- **Kontaktdaten**: Passen Sie Email und Telefonnummer in `Footer.tsx` und `contact/page.tsx` an
+- **Leistungen**: Bearbeiten Sie die Services in `services/page.tsx`
+
+## 📝 Lizenz
+
+Alle Rechte vorbehalten © 2025 J&F Development
