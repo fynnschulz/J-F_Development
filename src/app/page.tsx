@@ -57,47 +57,82 @@ export default function Home() {
 
   // Force videos to autoplay (especially for Safari)
   useEffect(() => {
-    const videos = document.querySelectorAll('video');
-    videos.forEach(video => {
-      // Ensure muted attribute is set for Safari
+    // Function to aggressively play videos
+    const playVideo = (video: HTMLVideoElement) => {
       video.muted = true;
+      video.volume = 0;
       video.setAttribute('muted', '');
       video.setAttribute('playsinline', '');
       
-      // Try to play immediately
-      const playPromise = video.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.log('Video autoplay was prevented, trying again:', err);
-          // Safari workaround: try again after a short delay
-          setTimeout(() => {
-            video.muted = true;
-            video.play().catch(e => console.log('Second attempt failed:', e));
-          }, 100);
-        });
-      }
+      const attemptPlay = () => {
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('Video playing successfully');
+            })
+            .catch(err => {
+              console.log('Video autoplay prevented, retrying...', err);
+              // Retry with increased delays
+              setTimeout(() => {
+                video.muted = true;
+                video.volume = 0;
+                video.play().catch(() => {
+                  setTimeout(() => {
+                    video.play().catch(e => console.log('Final attempt failed:', e));
+                  }, 500);
+                });
+              }, 200);
+            });
+        }
+      };
+
+      attemptPlay();
+    };
+
+    // Try to play all videos immediately
+    const videos = document.querySelectorAll('video');
+    videos.forEach(video => {
+      playVideo(video as HTMLVideoElement);
     });
 
-    // Additional Safari workaround: play on any user interaction
+    // Additional attempts with delays for stubborn browsers
+    setTimeout(() => {
+      videos.forEach(video => {
+        if ((video as HTMLVideoElement).paused) {
+          playVideo(video as HTMLVideoElement);
+        }
+      });
+    }, 300);
+
+    setTimeout(() => {
+      videos.forEach(video => {
+        if ((video as HTMLVideoElement).paused) {
+          playVideo(video as HTMLVideoElement);
+        }
+      });
+    }, 1000);
+
+    // Fallback: play on any user interaction
     const handleInteraction = () => {
       videos.forEach(video => {
-        if (video.paused) {
-          video.muted = true;
-          video.play().catch(err => console.log('Play on interaction failed:', err));
+        if ((video as HTMLVideoElement).paused) {
+          playVideo(video as HTMLVideoElement);
         }
       });
     };
 
-    // Listen for various interaction events
     document.addEventListener('click', handleInteraction, { once: true });
     document.addEventListener('touchstart', handleInteraction, { once: true });
     document.addEventListener('scroll', handleInteraction, { once: true });
+    document.addEventListener('mousemove', handleInteraction, { once: true });
 
     return () => {
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
       document.removeEventListener('scroll', handleInteraction);
+      document.removeEventListener('mousemove', handleInteraction);
     };
   }, []);
 
