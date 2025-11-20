@@ -55,14 +55,50 @@ export default function Home() {
   const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
 
-  // Force videos to autoplay
+  // Force videos to autoplay (especially for Safari)
   useEffect(() => {
     const videos = document.querySelectorAll('video');
     videos.forEach(video => {
-      video.play().catch(err => {
-        console.log('Video autoplay was prevented:', err);
-      });
+      // Ensure muted attribute is set for Safari
+      video.muted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      
+      // Try to play immediately
+      const playPromise = video.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log('Video autoplay was prevented, trying again:', err);
+          // Safari workaround: try again after a short delay
+          setTimeout(() => {
+            video.muted = true;
+            video.play().catch(e => console.log('Second attempt failed:', e));
+          }, 100);
+        });
+      }
     });
+
+    // Additional Safari workaround: play on any user interaction
+    const handleInteraction = () => {
+      videos.forEach(video => {
+        if (video.paused) {
+          video.muted = true;
+          video.play().catch(err => console.log('Play on interaction failed:', err));
+        }
+      });
+    };
+
+    // Listen for various interaction events
+    document.addEventListener('click', handleInteraction, { once: true });
+    document.addEventListener('touchstart', handleInteraction, { once: true });
+    document.addEventListener('scroll', handleInteraction, { once: true });
+
+    return () => {
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('scroll', handleInteraction);
+    };
   }, []);
 
   return (
@@ -80,7 +116,10 @@ export default function Home() {
             muted
             playsInline
             preload="auto"
+            webkit-playsinline="true"
+            x-webkit-airplay="allow"
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectFit: 'cover' }}
           >
             <source src="/hero-background.mp4" type="video/mp4" />
           </video>
@@ -326,7 +365,10 @@ export default function Home() {
             muted
             playsInline
             preload="auto"
+            webkit-playsinline="true"
+            x-webkit-airplay="allow"
             className="w-full h-full object-cover opacity-70"
+            style={{ objectFit: 'cover' }}
           >
             <source src="/mission.mp4" type="video/mp4" />
           </video>
