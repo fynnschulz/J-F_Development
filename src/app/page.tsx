@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -54,6 +54,16 @@ export default function Home() {
   const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
+
+  // Force videos to autoplay
+  useEffect(() => {
+    const videos = document.querySelectorAll('video');
+    videos.forEach(video => {
+      video.play().catch(err => {
+        console.log('Video autoplay was prevented:', err);
+      });
+    });
+  }, []);
 
   return (
     <div ref={containerRef} className="relative bg-black">
