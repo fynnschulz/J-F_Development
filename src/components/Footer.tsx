@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const scrollToSection = (sectionId: string) => {
@@ -99,6 +100,18 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-cyan-500/20">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+            <Link href="/impressum" passHref legacyBehavior>
+              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-slate-600 text-white font-semibold rounded-sm shadow hover:scale-105 transition-all duration-300">
+                Impressum
+              </button>
+            </Link>
+            <Link href="/datenschutz" passHref legacyBehavior>
+              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-slate-600 text-white font-semibold rounded-sm shadow hover:scale-105 transition-all duration-300">
+                Datenschutz
+              </button>
+            </Link>
+          </div>
           <p className="text-center text-xs text-gray-500 font-light">
             © {new Date().getFullYear()} J&F Development. Alle Rechte vorbehalten.
           </p>
