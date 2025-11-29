@@ -120,7 +120,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-amber-400 mb-1 tracking-wide uppercase">Email</h3>
-                    <p className="text-slate-300 font-light">info@jf-development.de</p>
+                    <p className="text-slate-300 font-light">helpjfdevelopemnt@gmail.com</p>
                   </div>
                 </motion.div>
 
