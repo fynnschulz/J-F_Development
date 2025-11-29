@@ -89,7 +89,7 @@ export default function Footer() {
             </h4>
             <div className="h-[2px] w-12 bg-gradient-to-r from-cyan-400 to-transparent mb-4" />
             <ul className="space-y-2 text-sm text-gray-400 font-light">
-              <li className="hover:text-cyan-400 transition-colors">helpjfdevelopemnt@gmail.com</li>
+              <li className="hover:text-cyan-400 transition-colors">helpjfdevelopment@gmail.com</li>
               <li className="hover:text-cyan-400 transition-colors">+49 (0) 123 456789</li>
               <li className="pt-2 text-xs text-gray-500 font-mono">
                 &gt; Mo-Fr: 9:00 - 18:00 Uhr
