@@ -2,57 +2,58 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hoveredService, setHoveredService] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   const services = [
     {
       title: 'Web Development',
-      description: 'Moderne, responsive Websites mit den neuesten Technologien. Von Design bis Deployment kümmern wir uns um alles.',
-      gradient: "from-blue-500 to-blue-600",
-      frameColor: "border-blue-400",
-      glowColor: "shadow-blue-500/50",
-      icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+      description: 'Hochmoderne Web-Anwendungen mit Next.js, React und modernsten Technologien',
+      icon: '🚀',
+      color: 'from-cyan-500 to-blue-600',
+      borderColor: 'hover:border-cyan-400'
     },
     {
       title: 'Mobile Apps',
-      description: 'Native Performance für iOS und Android aus einer Codebase mit React Native.',
-      gradient: "from-purple-500 to-purple-600",
-      frameColor: "border-purple-400",
-      glowColor: "shadow-purple-500/50",
-      icon: "M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-    },
-    {
-      title: 'Backend Systems',
-      description: 'Robuste Backend-Systeme für maximale Skalierbarkeit mit Cloud-Architekturen.',
-      gradient: "from-slate-500 to-slate-600",
-      frameColor: "border-slate-400",
-      glowColor: "shadow-slate-500/50",
-      icon: "M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+      description: 'Native Apps für iOS & Android mit React Native und Flutter',
+      icon: '📱',
+      color: 'from-purple-500 to-pink-600',
+      borderColor: 'hover:border-purple-400'
     },
     {
       title: 'UI/UX Design',
-      description: 'Interfaces die begeistern und konvertieren mit User-Centered Design.',
-      gradient: "from-pink-500 to-pink-600",
-      frameColor: "border-pink-400",
-      glowColor: "shadow-pink-500/50",
-      icon: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+      description: 'Benutzerfreundliche Interfaces die konvertieren und begeistern',
+      icon: '🎨',
+      color: 'from-orange-500 to-red-600',
+      borderColor: 'hover:border-orange-400'
     },
     {
-      title: 'Cloud & DevOps',
-      description: 'Cloud-Infrastruktur und DevOps für moderne Anwendungen mit CI/CD Pipelines.',
-      gradient: "from-teal-500 to-teal-600",
-      frameColor: "border-teal-400",
-      glowColor: "shadow-teal-500/50",
-      icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+      title: 'Cloud Solutions',
+      description: 'Skalierbare Cloud-Infrastruktur mit AWS, Azure und Google Cloud',
+      icon: '☁️',
+      color: 'from-emerald-500 to-teal-600',
+      borderColor: 'hover:border-emerald-400'
     }
   ];
-
-  const handleCardClick = () => {
-    setActiveCardIndex((prev) => (prev + 1) % services.length);
-  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -61,72 +62,113 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-slate-50">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Animated Background Gradient */}
+      <div 
+        className="fixed inset-0 opacity-30 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.3), transparent 50%)`
+        }}
+      />
+
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-white/80 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-slate-600 bg-clip-text text-transparent">
-            J&F Development
-          </h1>
-          <div className="flex gap-8 items-center">
-            <button onClick={() => scrollToSection('services')} className="text-gray-700 hover:text-blue-600 transition-colors duration-300 bg-transparent border-none cursor-pointer">Leistungen</button>
-            <button onClick={() => scrollToSection('about')} className="text-gray-700 hover:text-blue-600 transition-colors duration-300 bg-transparent border-none cursor-pointer">Über uns</button>
-            <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-blue-600 transition-colors duration-300 bg-transparent border-none cursor-pointer">Kontakt</button>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrollY > 50 ? 'bg-black/90 backdrop-blur-xl border-b border-white/10' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="relative w-10 h-10">
+              <Image
+                src="/logo1.png"
+                alt="J&F Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent animate-gradient">
+              J&F Development
+            </h1>
+          </div>
+          <div className="hidden md:flex gap-8 items-center">
+            <button onClick={() => scrollToSection('services')} className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 font-medium">Services</button>
+            <button onClick={() => scrollToSection('about')} className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 font-medium">Über uns</button>
+            <button onClick={() => scrollToSection('contact')} className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full font-semibold hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 hover:scale-105">
+              Kontakt
+            </button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <section className="min-h-screen flex items-center justify-center px-6 pt-20 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.1)_0%,_transparent_70%)]" />
+        
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="space-y-8 animate-fade-in-up">
-            <h2 className="text-6xl font-bold leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 via-slate-500 to-blue-600 bg-clip-text text-transparent animate-gradient">
-                NEXT-LEVEL
-              </span>
-              <br />
-              <span className="text-gray-800">DEVELOPMENT</span>
-            </h2>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              Wir entwickeln maßgeschneiderte Softwaresysteme, die Unternehmensprozesse präziser, schneller und effizienter machen.
+            <div className="space-y-4">
+              <div className="inline-block px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-sm font-semibold text-blue-400 animate-pulse-glow">
+                ✨ Ihre digitale Vision, unser Code
+              </div>
+              <h2 className="text-7xl lg:text-8xl font-black leading-none tracking-tight">
+                <span className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
+                  BUILD
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent animate-gradient">
+                  THE FUTURE
+                </span>
+              </h2>
+            </div>
+            <p className="text-xl text-gray-400 leading-relaxed max-w-xl">
+              Wir entwickeln maßgeschneiderte Softwarelösungen, die Ihre Geschäftsprozesse revolutionieren. 
+              Von der Idee bis zum Launch – <span className="text-white font-semibold">alles aus einer Hand</span>.
             </p>
-            <div className="flex gap-4">
-              <button onClick={() => scrollToSection('contact')} className="px-8 py-4 bg-gradient-to-r from-blue-600 to-slate-600 text-white rounded-full font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                Projekt anfragen
+            <div className="flex flex-wrap gap-4">
+              <button 
+                onClick={() => scrollToSection('contact')} 
+                className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] transition-all duration-300 hover:scale-105 flex items-center gap-2"
+              >
+                Projekt starten
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </button>
-              <button onClick={() => scrollToSection('services')} className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300">
-                Mehr lesen
+              <button 
+                onClick={() => scrollToSection('services')} 
+                className="px-8 py-4 border-2 border-white/20 rounded-full font-bold text-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 backdrop-blur-sm"
+              >
+                Mehr erfahren
               </button>
             </div>
           </div>
-          <div className="relative">
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-              className="w-full h-96 object-cover rounded-3xl animate-float shadow-2xl drop-shadow-[0_25px_50px_rgba(0,0,0,0.35)]"
-            >
-              <source src="/hero-background.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute -bottom-6 -right-6 w-80 bg-white/[0.78] rounded-3xl animate-float-delayed shadow-2xl p-6 border-2 border-gradient-to-br from-blue-400 to-slate-400 drop-shadow-[0_25px_50px_rgba(0,0,0,0.35)]">
-              <div className="relative w-full h-full">
-                <Image
-                  src="/logo1.png"
-                  alt="J&F Development Logo"
-                  width={200}
-                  height={200}
-                  className="object-contain mx-auto"
-                />
+
+          <div className="relative lg:h-[600px] h-[400px] animate-float">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl blur-3xl opacity-20 animate-pulse-slow" />
+            <div className="relative h-full bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover opacity-60"
+              >
+                <source src="/hero-background.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-16 h-16">
+                      <Image
+                        src="/logo1.png"
+                        alt="Logo"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">Powered by</p>
+                      <p className="text-lg font-bold">J&F Development</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -134,112 +176,138 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16 px-6 bg-white/50 relative overflow-hidden">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200/30 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-slate-200/30 rounded-full blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/2 left-5 w-24 h-24 bg-blue-200/30 rounded-full blur-2xl animate-pulse"></div>
+      <section id="services" className="py-32 px-6 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(6,182,212,0.1)_0%,_transparent_70%)]" />
         
-        <div className="max-w-6xl mx-auto relative">
-          <h3 className="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-blue-600 to-slate-600 bg-clip-text text-transparent">
-            UNSERE EXPERTISE
-          </h3>
-          
-          <div className="relative">
-            <div className={`absolute -top-8 -left-8 w-16 h-16 border-t-4 border-l-4 ${services[activeCardIndex].frameColor} rounded-tl-3xl transition-colors duration-500`}></div>
-            <div className={`absolute -top-8 -right-8 w-16 h-16 border-t-4 border-r-4 ${services[activeCardIndex].frameColor} rounded-tr-3xl transition-colors duration-500`}></div>
-            <div className={`absolute -bottom-8 -left-8 w-16 h-16 border-b-4 border-l-4 ${services[activeCardIndex].frameColor} rounded-bl-3xl transition-colors duration-500`}></div>
-            <div className={`absolute -bottom-8 -right-8 w-16 h-16 border-b-4 border-r-4 ${services[activeCardIndex].frameColor} rounded-br-3xl transition-colors duration-500`}></div>
-            
-            <div className="flex justify-center items-center min-h-[580px]">
-              <div 
-                className="relative w-[500px] h-[550px] cursor-pointer"
-                onClick={handleCardClick}
-              >
-              {services.map((service, index) => {
-                const position = (index - activeCardIndex + services.length) % services.length;
-                const isActive = position === 0;
-                
-                return (
-                  <div
-                    key={index}
-                    className={`absolute top-1/2 left-1/2 w-full p-10 bg-white rounded-3xl transition-all duration-500 ease-in-out ${isActive ? `shadow-2xl ${services[activeCardIndex].glowColor}` : 'shadow-xl'}`}
-                    style={{
-                      transform: `translate(-50%, -50%) translateX(${position * 15}px) translateY(${position * 15}px) rotate(${position * 2}deg) scale(${1 - position * 0.03})`,
-                      zIndex: services.length - position,
-                      opacity: position < 3 ? 1 - position * 0.15 : 0,
-                      pointerEvents: position === 0 ? 'auto' : 'none'
-                    }}
-                  >
-                    <div className={`w-20 h-20 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6 flex items-center justify-center transition-transform duration-300`}>
-                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={service.icon} />
-                      </svg>
-                    </div>
-                    <h4 className="text-3xl font-bold mb-5 text-gray-800">{service.title}</h4>
-                    <p className="text-lg text-gray-600 leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-            </div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-20 animate-fade-in-up">
+            <h3 className="text-6xl lg:text-7xl font-black mb-6 bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
+              UNSERE SERVICES
+            </h3>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Modernste Technologien für Ihre digitalen Ambitionen
+            </p>
           </div>
-          <p className="text-center mt-6 text-gray-500 text-sm">Klicken Sie, um den nächsten Service zu sehen</p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredService(index)}
+                onMouseLeave={() => setHoveredService(null)}
+                className={`group relative p-8 bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl rounded-3xl border-2 transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] ${service.borderColor} ${hoveredService === index ? 'border-opacity-100' : 'border-white/10'}`}
+                style={{
+                  animationDelay: `${index * 0.1}s`
+                }}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity duration-500`} />
+                
+                <div className="relative z-10">
+                  <div className={`text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300 ${hoveredService === index ? 'animate-bounce-slow' : ''}`}>
+                    {service.icon}
+                  </div>
+                  <h4 className="text-2xl font-bold mb-4 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+                    {service.title}
+                  </h4>
+                  <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                    {service.description}
+                  </p>
+                  <div className={`mt-6 h-1 bg-gradient-to-r ${service.color} w-0 group-hover:w-full transition-all duration-500 rounded-full`} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 px-6 bg-gradient-to-br from-blue-50 to-slate-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-5xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-slate-600 bg-clip-text text-transparent">
-            ÜBER UNS
-          </h3>
-          <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
-            <p>
-              Wir entwickeln maßgeschneiderte Softwaresysteme, die Unternehmensprozesse präziser, schneller und effizienter machen.
-              Mit moderner Technologie, sauberer Architektur und einem hohen Qualitätsanspruch schaffen wir digitale Lösungen, die echten geschäftlichen Mehrwert liefern.
-            </p>
-            <p>
-              Ob Industrie, Produktion, Handwerk, Dienstleistungen, Logistik, Einzelhandel, Gastronomie, Immobilien, Gesundheitswesen, Finanzen oder Startups – wir unterstützen Unternehmen jeder Branche dabei, Abläufe zu optimieren, Ressourcen besser zu nutzen und nachhaltige Effizienzsteigerungen zu erzielen.
-            </p>
-            <p className="text-xl font-semibold text-blue-600">
-              "Ihre Innovation, unser Service"
-            </p>
+      <section id="about" className="py-32 px-6 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,_rgba(139,92,246,0.1)_0%,_transparent_70%)]" />
+        
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl rounded-3xl border border-white/10 p-12 lg:p-16 shadow-2xl">
+            <h3 className="text-5xl lg:text-6xl font-black mb-8 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+              ÜBER UNS
+            </h3>
+            <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+              <p>
+                Wir sind <span className="text-white font-semibold">J&F Development</span> – ein innovatives Team von Entwicklern, 
+                Designern und Strategen, die eine Leidenschaft für herausragende digitale Lösungen teilen.
+              </p>
+              <p>
+                Mit modernster Technologie und einem tiefen Verständnis für Geschäftsprozesse entwickeln wir 
+                <span className="text-blue-400 font-semibold"> maßgeschneiderte Software</span>, die echten Mehrwert schafft.
+              </p>
+              <p>
+                Ob Startup, Mittelstand oder Enterprise – wir unterstützen Unternehmen jeder Größe dabei, 
+                ihre <span className="text-cyan-400 font-semibold">digitale Vision</span> Wirklichkeit werden zu lassen.
+              </p>
+              <div className="pt-6 border-t border-white/10 mt-8">
+                <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  "Innovation trifft Exzellenz"
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { number: '50+', label: 'Projekte realisiert' },
+              { number: '100%', label: 'Kundenzufriedenheit' },
+              { number: '24/7', label: 'Support verfügbar' }
+            ].map((stat, index) => (
+              <div key={index} className="text-center p-8 bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 hover:border-blue-500/50 transition-all duration-300 hover:scale-105">
+                <div className="text-5xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-gray-400 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section id="contact" className="py-12 px-6 bg-gradient-to-r from-blue-600 via-slate-500 to-blue-600">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h3 className="text-5xl font-bold mb-6">Bereit für Ihr nächstes Projekt?</h3>
-          <p className="text-xl mb-8 opacity-90">
-            Let's talk! Kontaktieren Sie uns noch heute.
-          </p>
-          <a href="mailto:helpjfdevelopment@gmail.com" className="inline-block px-10 py-5 bg-white text-blue-600 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-            Kontakt aufnehmen
-          </a>
+      <section id="contact" className="py-32 px-6 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(59,130,246,0.2)_0%,_transparent_70%)]" />
+        
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl rounded-3xl border border-white/10 p-12 lg:p-16 shadow-2xl">
+            <h3 className="text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+              Bereit durchzustarten?
+            </h3>
+            <p className="text-xl text-gray-300 mb-10 leading-relaxed">
+              Lassen Sie uns gemeinsam Ihre digitale Vision verwirklichen. 
+              Kontaktieren Sie uns noch heute für ein unverbindliches Erstgespräch.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="mailto:helpjfdevelopment@gmail.com" 
+                className="group px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full font-bold text-lg hover:shadow-[0_0_50px_rgba(59,130,246,0.6)] transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <span>📧</span>
+                E-Mail senden
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </a>
+              <a 
+                href="tel:+491234567890" 
+                className="px-10 py-5 border-2 border-white/20 rounded-full font-bold text-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 backdrop-blur-sm flex items-center justify-center gap-2"
+              >
+                <span>📞</span>
+                Anrufen
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <h4 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-slate-400 bg-clip-text text-transparent">
-            J&F Development
-          </h4>
-          <p className="text-gray-400 mb-6">Exzellenz in digitaler Handwerkskunst seit 2025</p>
-          <div className="flex justify-center gap-6 mb-6">
-            <a href="/impressum" className="text-gray-400 hover:text-white transition-colors">Impressum</a>
-            <span className="text-gray-600">•</span>
-            <a href="/datenschutz" className="text-gray-400 hover:text-white transition-colors">Datenschutz</a>
-            <span className="text-gray-600">•</span>
-            <a href="mailto:helpjfdevelopment@gmail.com" className="text-gray-400 hover:text-white transition-colors">Kontakt</a>
-          </div>
-          <p className="text-sm text-gray-500">© 2025 J&F Development. Alle Rechte vorbehalten.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
